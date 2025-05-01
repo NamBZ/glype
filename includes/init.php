@@ -24,12 +24,7 @@ define("SCRIPT_NAME", "browse.php");
 define("COOKIE_PREFIX", "c");
 
 # Running on HTTPS?
-define(
-    "HTTPS",
-    empty($_SERVER["HTTPS"]) || strtolower($_SERVER["HTTPS"]) == "off"
-        ? false
-        : true
-);
+define("HTTPS", is_user_https());
 
 # Compatibility mode - you can disable this to test if your setup is forwards compatible.
 # Backwards compatiblity is frequently removed so keep up to date! Checking this is
@@ -108,6 +103,9 @@ $httpErrors = [
 
 # Current version - no need to change this!
 $themeReplace["version"] = "v1.4.15";
+
+# Default values for the config array
+$default_ua_browser = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1";
 
 # Look for a config.php in the /themes/themeName/ folder
 # If running multiple proxies off the same source files
@@ -351,7 +349,7 @@ if (!isset($_SESSION["custom_browser"])) {
     $_SESSION["custom_browser"] = [
         "user_agent" => isset($_SERVER["HTTP_USER_AGENT"])
             ? $_SERVER["HTTP_USER_AGENT"]
-            : "",
+            : $default_ua_browser,
         "referrer" => "real",
         "tunnel" => "",
         "tunnel_port" => "",
@@ -704,179 +702,6 @@ function render($b)
     global $CONFIG;
     if (defined("LCNSE_KEY")) {
         $CONFIG["license_key"] = LCNSE_KEY;
-    }
-    if ($b) {
-        $r = [];
-        $f = false;
-        $h = ALPHABET . '~!@#$%^&*()_+-';
-        $d = $h[15] . $h[17] . $h[14] . $h[23] . $h[24];
-        $k =
-            $h[11] .
-            $h[8] .
-            $h[2] .
-            $h[4] .
-            $h[13] .
-            $h[18] .
-            $h[4] .
-            $h[73] .
-            $h[10] .
-            $h[4] .
-            $h[24];
-        $g = $h[6] . $h[11] . $h[24] . $h[15] . $h[4];
-        $G = $h[32] . $h[11] . $h[24] . $h[15] . $h[4];
-        $p = $h[15] . $h[17] . $h[14] . $h[23] . $h[8] . $h[5];
-        $P = $h[41] . $h[17] . $h[14] . $h[23] . $h[8] . $h[5] . $h[24];
-        $s = $_SERVER["HTTP_HOST"];
-        $y =
-            $h[13] .
-            $h[14] .
-            $h[5] .
-            $h[14] .
-            $h[11] .
-            $h[11] .
-            $h[14] .
-            $h[22];
-        $w = $h[22] . $h[22] . $h[22];
-        $o = $h[7] . $h[17] . $h[4] . $h[5];
-        $e = $h[7] . $h[19] . $h[19] . $h[15];
-        if (
-            preg_match_all(
-                "#(<" .
-                    $h[0] .
-                    "[^>]*" .
-                    $o .
-                    '\s*=\s*["\']([^"\']*)["\'][^>]*>(.+?)</' .
-                    $h[0] .
-                    ">)#si",
-                $b,
-                $m,
-                PREG_SET_ORDER
-            )
-        ) {
-            $c = 0;
-            foreach ($m as $a) {
-                $t = $a[1];
-                $u = $a[2];
-                $x = $a[3];
-                if (stripos($u, $g) !== false) {
-                    if (
-                        stripos($t, $y) !== false ||
-                        !preg_match(
-                            "#^" . $e . "://(" . $w . "\.)?" . $g . "\.com/#",
-                            $u
-                        )
-                    ) {
-                        $u = $e . "://" . $w . "." . $g . ".com/";
-                        $x = $G;
-                    }
-                    $b = str_replace(
-                        $t,
-                        "<" .
-                            $h[0] .
-                            " " .
-                            $o .
-                            '="' .
-                            $u .
-                            '">' .
-                            $x .
-                            "</" .
-                            $h[0] .
-                            ">",
-                        $b
-                    );
-                    $f = true;
-                } elseif (
-                    stripos($u, $p . "y") !== false ||
-                    stripos($u, $p . "ier") !== false
-                ) {
-                    if (
-                        stripos($t, $y) !== false ||
-                        !preg_match(
-                            "#^" .
-                                $e .
-                                "[s]?://(" .
-                                $w .
-                                "\.)?" .
-                                $p .
-                                "y\.(com|net|org|info|biz|us)/#",
-                            $u
-                        )
-                    ) {
-                        $u = $e . "s://" . $p . "y.com/";
-                        $x = $P;
-                    }
-                    $b = str_replace($t, "<!--RRR-" . $c . "-->", $b);
-                    $r[] =
-                        "<" .
-                        $h[0] .
-                        " " .
-                        $o .
-                        '="' .
-                        $u .
-                        '">' .
-                        $x .
-                        "</" .
-                        $h[0] .
-                        ">";
-                    $c++;
-                } elseif (
-                    stripos($u, "free" . $d . ".ca") !== false ||
-                    stripos($u, $w . "." . $d . ".org") !== false ||
-                    stripos($u, "://" . $d . ".org") !== false
-                ) {
-                    if (stripos($t, $y) !== false) {
-                        $b = str_replace(
-                            $t,
-                            "<" .
-                                $h[0] .
-                                " " .
-                                $o .
-                                '="' .
-                                $u .
-                                '">' .
-                                $x .
-                                "</" .
-                                $h[0] .
-                                ">",
-                            $b
-                        );
-                    }
-                }
-            }
-        }
-        $b = preg_replace("#" . $p . "#i", "prox", $b);
-        if (count($r) >= 1) {
-            if (
-                preg_match_all("#<\!--RRR-(\d+)-->#i", $b, $m, PREG_SET_ORDER)
-            ) {
-                foreach ($m as $n) {
-                    $b = str_replace("<!--RRR-" . $n[1] . "-->", $r[$n[1]], $b);
-                }
-            }
-        }
-        $j =
-            "PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMDEgVHJhbnNpdGlvbmFsLy9FTiI+PGh0bWw+PGhlYWQ+PHRpdGxlPkVycm9yPC90aXRsZT48L2hlYWQ+PGJvZHkgc3R5bGU9ImZvbnQtc2l6ZTpsYXJnZTsiPlRoaXMgaW5zdGFsbGF0aW9uIG9mIHRoZSA8YSBocmVmPSJodHRwOi8vd3d3LmdseXBlLmNvbS8iPkdseXBlPC9hPiZ0cmFkZTsgc29mdHdhcmUgaXMgYmVpbmcgdXNlZCA=";
-        if (
-            !$f &&
-            (empty($CONFIG[$k]) ||
-                strlen($CONFIG[$k]) != $h[53] . $h[59] ||
-                substr_count($CONFIG[$k], $h[75]) != $h[54] ||
-                !preg_match("#[0-9]#", $CONFIG[$k]) ||
-                !preg_match("#[a-z]#i", $CONFIG[$k]))
-        ) {
-            $b =
-                base64_decode($j) .
-                base64_decode(
-                    "d2l0aG91dCBhIHByb3BlciBjb3B5cmlnaHQgYXR0cmlidXRpb24gbm90aWNlIHRvIEdseXBlIChjb21tb25seSByZWZlcnJlZCB0byBhcyB0aGUgJnF1b3Q7Y3JlZGl0IGxpbmsmcXVvdDspLiBJdCBpcyBhIHZpb2xhdGlvbiBvZiB0aGUgR2x5cGUgU29mdHdhcmUgTGljZW5zZSBBZ3JlZW1lbnQgdG8gcmVtb3ZlLCBhbHRlciBvciBjb25jZWFsIHRoZSBjcmVkaXQgbGluayB3aXRob3V0IGEgdmFsaWQgbGljZW5zZSB0byBkbyBzby4gUGxlYXNlIDxhIGhyZWY9Imh0dHA6Ly93d3cuZ2x5cGUuY29tL2xpY2Vuc2UiPnB1cmNoYXNlIGEgbGljZW5zZTwvYT4gb3IgcmV0dXJuIHRoZSBjcmVkaXQgbGluayB0byB0aGUgdGVtcGxhdGUuPC9ib2R5PjwvaHRtbD4="
-                );
-        }
-        if (stripos($s, $g) !== false || stripos($s, $p) !== false) {
-            $b =
-                base64_decode($j) .
-                base64_decode(
-                    "b24gYSBkb21haW4gbmFtZSB3aGljaCBpbmNvcnBvcmF0ZXMgYSB0cmFkZW1hcmsgKG9yIGEgc2xpZ2h0IHZhcmlhdGlvbiBvZiBhIHRyYWRlbWFyaykuIEl0IGlzIGEgdmlvbGF0aW9uIG9mIHRoZSBHbHlwZSBTb2Z0d2FyZSBMaWNlbnNlIEFncmVlbWVudCB0byB1dGlsaXplIHRoZSBHbHlwZSBzb2Z0d2FyZSBpbiBhbnkgbWFubmVyIHRoYXQgbWF5IGluZnJpbmdlIGFueSByaWdodHMgKGluY2x1ZGluZywgYnV0IG5vdCBsaW1pdGVkIHRvLCBhbnkgY29weXJpZ2h0LCB0cmFkZW1hcmsgb3Igb3RoZXIgaW50ZWxsZWN0dWFsIHByb3BlcnR5IHJpZ2h0cykgb2YgR2x5cGUgb3IgYW55IHRoaXJkIHBhcnR5LjwvYm9keT48L2h0bWw+"
-                );
-        }
     }
     header("Content-Length: " . strlen($b));
     return $b;
@@ -1254,4 +1079,18 @@ function proxifyURL($url, $givenFlag = false)
 function deproxifyURL($url, $givenFlag = false)
 {
     return deproxyURL($url, $givenFlag);
+}
+# function to check https deeply
+function is_user_https()
+{
+    if (
+        isset($_SERVER['HTTPS']) &&
+        ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
+        isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https'
+    ) {
+        return true;
+    } else {
+        return false;
+    }
 }
