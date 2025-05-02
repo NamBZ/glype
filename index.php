@@ -93,7 +93,7 @@ if (isset($_GET['e']) && isset($phrases[$_GET['e']])) {
     }
 
     # Finally add it to the $themeReplace array to get it in there
-    $themeReplace['error'] = '<div id="error">' . $error . '</div>';
+    $themeReplace['error'] = '<div id="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">' . $error . '</div>';
 
     # And a link to try again?
     if (! empty($_GET['return'])) {
@@ -106,7 +106,7 @@ if (isset($_GET['e']) && isset($phrases[$_GET['e']])) {
  ******************************************************************/
 
 if (version_compare(PHP_VERSION, 5) < 0) {
-    $themeReplace['error'] = '<div id="error">You need PHP 5 to run this script. You are currently running ' . PHP_VERSION . '</div>';
+    $themeReplace['error'] = '<div id="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">You need PHP 5 to run this script. You are currently running ' . PHP_VERSION . '</div>';
 }
 
 

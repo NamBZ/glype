@@ -30,16 +30,23 @@ ob_start();
  ******************************************************************/
 
 echo <<<OUT
-    <h2 class="first">Manage Cookies</h2>
-    <p>You can view and delete cookies set on your computer by sites accessed through our service. Your cookies are listed below:</p>
+<section class="pt-12">
+    <h2 class="section-title pt-12">Manage Cookies</h2>
+    <p class="mb-6 text-gray-700">
+        You can view and delete cookies set on your computer by sites accessed through our service. Your cookies are listed below:
+    </p>
     <form action="includes/process.php?action=cookies" method="post">
-        <table cellpadding="2" cellspacing="0" align="center">
+    <div class="overflow-x-auto">
+        <table class="min-w-full border border-gray-300 text-left text-sm">
+            <thead class="bg-gray-100">
             <tr>
-                <th width="33%">Website</th>
-                <th width="33%">Name</th>
-                <th width="33%">Value</th>
-                <th>&nbsp;</th>
+                <th class="py-2 px-4 w-1/3 border-b">Website</th>
+                <th class="py-2 px-4 w-1/3 border-b">Name</th>
+                <th class="py-2 px-4 w-1/3 border-b">Value</th>
+                <th class="py-2 px-4 border-b text-center">Select</th>
             </tr>
+            </thead>
+            <tbody>
 
 OUT;
 
@@ -144,8 +151,8 @@ if ($CONFIG['cookies_on_server']) {
 if (empty($showCookies)) {
 
     echo <<<OUT
-        <tr>
-            <td colspan="4" align="center">No cookies found</td>
+        <tr class="hover:bg-gray-50">
+            <td class="py-2 px-4 border-b" colspan="4" align="center">No cookies found</td>
         </tr>
 
 OUT;
@@ -177,16 +184,16 @@ OUT;
 
             # Replace the value with a shorten version that expands onclick
             $value  = <<<OUT
-            <span id="{$rowID}">{$truncated}<a style="cursor:pointer;" onclick="document.getElementById('{$rowID}').innerHTML='{$wrapped}';">...</a></span>
+            <span id="{$rowID}">{$truncated}<a  class="text-blue-500 underline ml-1" style="cursor:pointer;" onclick="document.getElementById('{$rowID}').innerHTML='{$wrapped}';">...</a></span>
 OUT;
         }
 
         echo <<<OUT
-            <tr>
-                <td>{$website}</td>
-                <td>{$name}</td>
-                <td>{$value}</td>
-                <td><input type="checkbox" name="delete[]" value="{$cookie[0]}|{$cookie[1]}|{$name}"></td>
+            <tr class="hover:bg-gray-50">
+                <td class="py-2 px-4 border-b">{$website}</td>
+                <td class="py-2 px-4 border-b">{$name}</td>
+                <td class="py-2 px-4 border-b">{$value}</td>
+                <td class="py-2 px-4 border-b text-center"><input type="checkbox" class="form-checkbox" name="delete[]" value="{$cookie[0]}|{$cookie[1]}|{$name}"></td>
             </tr>
 
 OUT;
@@ -200,10 +207,12 @@ OUT;
 
 echo <<<OUT
             <tr>
-                <th colspan="3" align="right"><input type="submit" value="Delete"></th>
-                <th><input type="checkbox" name="checkall"  onclick="selectAll(this)"></th>
+                <th colspan="3" class="py-2 px-4 text-right"><input class="bg-red-500 hover:bg-red-600 text-white font-medium py-1 px-4 rounded" type="submit" value="Delete"></th>
+                <th class="py-2 px-4 text-center"><input type="checkbox" name="checkall"  onclick="selectAll(this)" class="form-checkbox"></th>
             </tr>
+            </tbody>
         </table>
+    </div>
     </form>
     <script type="text/javascript">
         function selectAll(checkbox) {
@@ -215,6 +224,7 @@ echo <<<OUT
             }
         }
     </script>
+    </section>
 OUT;
 
 

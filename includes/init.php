@@ -928,7 +928,7 @@ function error($type, $allowReload = false)
     }
 
     # Finally add it to the $themeReplace array to get it in there
-    $themeReplace["error"] = '<div id="error">' . $errorText . "</div>";
+    $themeReplace["error"] = '<div id="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">' . $errorText . "</div>";
 
     # And a link to try again?
     $return = currentURL();
