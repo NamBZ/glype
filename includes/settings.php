@@ -37,7 +37,7 @@ $CONFIG['enable_blockscript'] = false;
 $CONFIG['theme'] = 'modern';
 
 # Run plugins on these websites
-$CONFIG['plugins'] = 'twitter.com,google.com,youtube.com,ytimg.com,facebook.com,live.com,myspace.com,yahoo.com,hotmail.com,msn.com';
+$CONFIG['plugins'] = '';
 
 # Temporary directory used by the script. Many features require
 # write permission to the temporary directory. Ensure this
